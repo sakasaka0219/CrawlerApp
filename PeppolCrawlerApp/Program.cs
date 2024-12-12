@@ -1,12 +1,12 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using PeppolCrawlerApp;
 using System.Text;
 
 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-Console.WriteLine("Hello, World!");
+
+List<EdinetCodeClass> edinetCodeList = new List<EdinetCodeClass>();
 
 //csv読み込み
 string filePath = @".\Data\sample.csv";
-
 try
 {
     using (StreamReader reader = new StreamReader(filePath, Encoding.GetEncoding("Shift_JIS")))
@@ -27,13 +27,24 @@ try
             // カンマで分割して各要素を配列に格納
             string[] values = line.Split(',');
 
-            // 分割した値を表示
-            foreach (var value in values)
+            EdinetCodeClass edinetCode = new EdinetCodeClass
             {
-                Console.Write(value + "\t");
-            }
-            Console.WriteLine(); // 行を分ける
+                EdinetCode = values[0].Replace("\"", ""),
+                SubmitterType = values[1].Replace("\"", ""),
+                ListingStatus = values[2].Replace("\"", ""),
+                IsConsolidated = values[3].Replace("\"", "") == "有",
+                Capital = Decimal.Parse(values[4].Replace("\"", "")),
+                FiscalYearEnd = new DateTime(2023, 3, 31),
+                SubmitterName = values[6].Replace("\"", ""),
+                SubmitterNameEnglish = values[7].Replace("\"", ""),
+                SubmitterNameYomi = values[8].Replace("\"", ""),
+                Address = values[9].Replace("\"", ""),
+                SubmitterIndustry = values[10].Replace("\"", ""),
+                SecuritiesCode = values[11].Replace("\"", ""),
+                CorporateNumber = values[12].Replace("\"", "")
+            };
 
+            edinetCodeList.Add(edinetCode);
         }
     }
 }
